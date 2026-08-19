@@ -1,9 +1,10 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, Link } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
-import { Loader2, AlertCircle, ArrowLeft, CheckCircle2, UserCheck, Lock, Sparkles, Vote } from 'lucide-react';
+import { Loader2, AlertCircle, ArrowLeft, CheckCircle2, Lock, Vote } from 'lucide-react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
+import ResultsView from '../components/ResultsView';
 
 const API_BASE_URL = import.meta.env.VITE_API_URL || 'http://localhost:8000';
 
@@ -185,7 +186,7 @@ export default function PollVotingPage() {
       setTimeout(() => {
         setShowVoteSuccess(false);
         setFlowStep('already_voted');
-      }, 1800);
+      }, 1500);
     } catch (err) {
       console.error('Failed to cast vote:', err);
       setVoteError(err.message || 'Something went wrong casting your vote. Please try again.');
@@ -259,52 +260,22 @@ export default function PollVotingPage() {
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="glass-card rounded-2xl p-8 sm:p-12 text-center border border-amber-500/30 max-w-xl mx-auto"
+                className="w-full"
               >
-                <div className="w-12 h-12 rounded-full bg-amber-950/50 border border-amber-500/40 flex items-center justify-center text-amber-400 mx-auto mb-4">
-                  <Lock className="w-6 h-6" />
-                </div>
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-amber-950/60 border border-amber-500/40 text-amber-300 text-xs font-semibold uppercase tracking-wider mb-4">
-                  <span>Voting Closed</span>
-                </div>
-                <h1 className="font-display font-semibold text-2xl sm:text-4xl text-white mb-4 leading-tight">
-                  "{poll.question}"
-                </h1>
-                <p className="text-slate-400 text-sm sm:text-base">
-                  Voting has been closed by the creator of this poll.
-                </p>
+                <ResultsView pollId={id} initialPollData={poll} />
               </motion.div>
             )}
 
-            {/* 4. Already Voted State */}
+            {/* 4. Already Voted State / Live Results View */}
             {flowStep === 'already_voted' && !showVoteSuccess && (
               <motion.div
                 key="already_voted"
                 initial={{ opacity: 0, y: 15 }}
                 animate={{ opacity: 1, y: 0 }}
                 exit={{ opacity: 0, y: -15 }}
-                className="glass-card rounded-2xl p-8 sm:p-12 text-center border border-violet-500/30 max-w-xl mx-auto shadow-2xl"
+                className="w-full"
               >
-                <div className="w-14 h-14 rounded-full bg-emerald-500/10 border border-emerald-500/30 flex items-center justify-center text-emerald-400 mx-auto mb-5">
-                  <UserCheck className="w-7 h-7" />
-                </div>
-
-                <div className="inline-flex items-center gap-1.5 px-3 py-1 rounded-full bg-violet-950/40 border border-violet-500/30 text-violet-300 text-xs font-medium mb-4">
-                  <Sparkles className="w-3.5 h-3.5 text-orange-400" />
-                  <span>Vote Recorded</span>
-                </div>
-
-                <h1 className="font-display font-semibold text-2xl sm:text-4xl text-white mb-4 leading-tight">
-                  "{poll.question}"
-                </h1>
-
-                <p className="text-slate-300 text-sm sm:text-base mb-6 font-normal">
-                  You've already voted on this poll!
-                </p>
-
-                <div className="p-4 rounded-xl bg-slate-900/60 border border-white/5 text-xs text-slate-400">
-                  Live real-time results screen is coming next!
-                </div>
+                <ResultsView pollId={id} initialPollData={poll} />
               </motion.div>
             )}
 
@@ -329,7 +300,7 @@ export default function PollVotingPage() {
                   Vote Submitted!
                 </h2>
                 <p className="text-emerald-200/80 text-sm">
-                  Your response has been registered.
+                  Loading real-time live results...
                 </p>
               </motion.div>
             )}
