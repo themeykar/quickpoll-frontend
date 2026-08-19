@@ -1,12 +1,15 @@
 import React from 'react';
+import { useNavigate } from 'react-router-dom';
 import Navbar from '../components/Navbar';
 import Hero from '../components/Hero';
 import HowItWorks from '../components/HowItWorks';
 import Footer from '../components/Footer';
 
 export default function LandingPage() {
+  const navigate = useNavigate();
+
   const handleCreatePollClick = () => {
-    alert('Poll creation will be built in the next step!');
+    navigate('/create');
   };
 
   return (

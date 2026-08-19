@@ -1,8 +1,19 @@
 import React, { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { Sparkles, ArrowRight, Zap, ShieldCheck, Users } from 'lucide-react';
 
 export default function Hero({ onCreatePollClick }) {
+  const navigate = useNavigate();
+
+  const handleCtaClick = () => {
+    if (onCreatePollClick) {
+      onCreatePollClick();
+    } else {
+      navigate('/create');
+    }
+  };
+
   // Live mock poll state to create an authentic live feel
   const [mockVotes, setMockVotes] = useState({
     vite: 215,
@@ -91,7 +102,7 @@ export default function Hero({ onCreatePollClick }) {
         className="mt-9 flex flex-col sm:flex-row items-center gap-4"
       >
         <button
-          onClick={onCreatePollClick}
+          onClick={handleCtaClick}
           className="btn-gradient group px-8 py-4 rounded-full text-base font-semibold text-white tracking-wide shadow-xl flex items-center gap-3 hover:scale-105 active:scale-95 transition-all duration-300 cursor-pointer"
         >
           <span>Create a Poll</span>
