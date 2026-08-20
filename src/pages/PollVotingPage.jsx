@@ -174,6 +174,11 @@ export default function PollVotingPage() {
         );
       }
 
+      const updatedPollData = await res.json().catch(() => null);
+      if (updatedPollData && updatedPollData.options) {
+        setPoll(updatedPollData);
+      }
+
       // Store voter_id in localStorage under voter_id_{id}
       try {
         localStorage.setItem(`voter_id_${id}`, voterId);

@@ -61,6 +61,7 @@ export default function ResultsView({ pollId, initialPollData }) {
 
     const fetchInitialState = async () => {
       if (initialPollData) {
+        setPoll(initialPollData);
         setIsLoading(false);
         return;
       }
