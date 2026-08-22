@@ -1,7 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import { useParams, useLocation, Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { CheckCircle2, Copy, Check, Lock, ExternalLink, ArrowRight, Share2, Sparkles, ShieldAlert } from 'lucide-react';
+import { CheckCircle2, Copy, Check, Lock, ExternalLink, ArrowRight, Share2, Sparkles, ShieldAlert, Download, QrCode } from 'lucide-react';
+import { QRCodeCanvas } from 'qrcode.react';
 import Navbar from '../components/Navbar';
 import Footer from '../components/Footer';
 
@@ -52,6 +53,19 @@ export default function PollCreatedPage() {
     navigator.clipboard.writeText(adminUrl);
     setCopiedAdminLink(true);
     setTimeout(() => setCopiedAdminLink(false), 2000);
+  };
+
+  // Download QR code as PNG image
+  const handleDownloadQR = () => {
+    const canvas = document.getElementById('poll-qr-canvas');
+    if (!canvas) return;
+    const pngUrl = canvas.toDataURL('image/png');
+    const downloadLink = document.createElement('a');
+    downloadLink.href = pngUrl;
+    downloadLink.download = `poll-${id}-qr.png`;
+    document.body.appendChild(downloadLink);
+    downloadLink.click();
+    document.body.removeChild(downloadLink);
   };
 
   return (
@@ -127,6 +141,33 @@ export default function PollCreatedPage() {
                     <span>Copy Voting Link</span>
                   </>
                 )}
+              </button>
+            </div>
+
+            {/* QR Code Option */}
+            <div className="mt-6 pt-6 border-t border-white/10 flex flex-col items-center justify-center text-center">
+              <span className="text-xs font-semibold text-slate-300 mb-3 flex items-center gap-1.5">
+                <QrCode className="w-4 h-4 text-violet-400" />
+                <span>Or scan to vote</span>
+              </span>
+
+              <div className="p-3.5 bg-white rounded-2xl shadow-xl border border-white/20 inline-block mb-3">
+                <QRCodeCanvas
+                  id="poll-qr-canvas"
+                  value={votingUrl}
+                  size={160}
+                  bgColor="#ffffff"
+                  fgColor="#000000"
+                  level="H"
+                />
+              </div>
+
+              <button
+                onClick={handleDownloadQR}
+                className="px-4 py-2 rounded-xl bg-slate-900 hover:bg-slate-800 border border-violet-500/30 text-xs font-semibold text-slate-200 hover:text-white flex items-center justify-center gap-2 transition-all cursor-pointer shadow-md active:scale-95"
+              >
+                <Download className="w-3.5 h-3.5 text-violet-400" />
+                <span>Download QR Code</span>
               </button>
             </div>
           </motion.div>
